@@ -1,0 +1,44 @@
+.fade:not(.show) {
+    opacity: 1 !important;
+}
+.badge{
+    border-radius: 5px;
+}
+.badge-dark{
+    background-color: #1e1484;
+}
+.modal-dialog{
+    top: 50px;
+}
+.modal-backdrop{
+    background-color: transparent;
+}
+.popover{
+    display: none;
+}
+.kv-popover-active{
+    display: block!important;
+}
+.kv-editable-reset{
+    margin: 0px;
+    padding: 10px;
+    border: darkgray solid 1px;
+}
+.kv-editable-submit{
+    margin: 0px;
+    padding: 10px;
+}
+.table thead tr th{
+    color: #5A738E;
+}
+.not-allowed {
+    opacity: 0.5;
+    cursor: default;
+    pointer-events: none;
+}
+a:not([href]):not([tabindex]){
+    color: white;
+}
+a:not([href]):not([tabindex]):hover{
+    color: white;
+}
