@@ -90,6 +90,32 @@ class LineController extends Controller
         ]);
     }
 
+    public function actionChart()
+    {
+        $mail =Yii::$app->request->post();
+        $dataModels=array('date'=>'','data'=>'','color'=>'');
+        if($mail!=null){
+            $orderby = "FROM_UNIXTIME(created_at,'%D %M %Y')";
+            $rows = (new \yii\db\Query())
+                ->select(['count(id) as count', 'FROM_UNIXTIME(created_at,\'%D %M %Y\') as time'])
+                ->from('line')
+                ->where('created_at > :date1 and created_at < :date2 and enabled = :status',[':status' =>$mail["status"],':date1' => strtotime($mail['date1']),':date2' => strtotime($mail['date2'])])
+                ->groupBy([$orderby])
+                ->all();
+            foreach ($rows as $item){
+                $data[] = $item["count"];
+                $dataColor[] = 'rgba(255, 99, '.$item["count"].', 0.2)';
+                $dateDate[] = $item["time"];
+            }
+            $ardataDate = json_encode($dateDate);
+            $ardata = json_encode($data);
+            $ardataColor = json_encode($dataColor);
+            $dataModels = array('date'=>$ardataDate,'data'=>$ardata,'color'=>$ardataColor);
+        }
+
+        return $this->render('chart',['dataModels'=>$dataModels]);
+    }
+
     /**
      * Creates a new Line model.
      * If creation is successful, the browser will be redirected to the 'view' page.

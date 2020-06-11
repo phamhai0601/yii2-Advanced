@@ -19,11 +19,16 @@ class AppAsset extends AssetBundle
         'vendors/bootstrap-progressbar/css/bootstrap-progressbar-3.3.4.min.css',
         'build/css/custom.min.css',
         'css/custom.css',
+        'https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css',
+
     ];
     public $js = [
         'build/js/custom.min.js',
         'js/jquery_custom.js',
         'js/rails.js',
+        'https://cdn.jsdelivr.net/npm/chart.js@2.8.0/dist/Chart.min.js',
+        'https://cdn.jsdelivr.net/momentjs/latest/moment.min.js',
+        'https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js'
     ];
     public $depends = [
         'yii\web\YiiAsset',

@@ -9,136 +9,86 @@ use yii\helpers\ArrayHelper;
 /* @var $form yii\widgets\ActiveForm */
 /* @var $adminPackages \app\models\AdminPackage */
 /* @var $bouquet \app\models\Bouquet */
+/* @var $dataModels */
 
 ?>
-
-<?php $form = ActiveForm::begin(); ?>
-<div class="form-group">
-<!--    <label>UserName</label>
-    <input type="text" class="form-control" name="username" placeholder="Username" >-->
-    <?= $form->field($model, 'username')->textInput(['maxlength' => true]) ?>
-</div>
-<div class="form-group">
-    <?= $form->field($model, 'password')->passwordInput(['maxlength' => true,'type'=>'text'])?>
-</div>
-<div class="form-group pull-right">
-    <a id="add_ips" class="btn btn-success btn-lg">Add New IPs</a>
-</div>
-<div class="clearfix"></div>
-<div class="form-group">
-    <table class="table table-hover table-bordered table-sortable" id="myTable">
-        <thead style="background: lightgray">
+<div style="padding: 0 20%">
+    <?php $form = ActiveForm::begin(); ?>
+    <table>
         <tr>
-            <th class="text-center col-sm-10">IPs</th>
-            <th class="text-center col-sm-2"" width="">Option</th>
-        </tr>
-        </thead>
-        <tbody id=ips>
-        <tr>
-            <td class="text-center">
-                <input type="text" name="Line[allowed_ips][]" class="col-sm-12 form-control" placeholder="Please enter Ip...">
+            <td style="padding: 0 10px">
+                <input type="text" name="daterange" value="01/01/2018 - 01/15/2018" style="background: lightgray;border: 2px;padding: 5px;"/>
             </td>
-            <td class="text-center">
-                <a class="btn btn-danger glyphicon glyphicon-remove"></a>
-            </td></tr>
-        </tbody>
+            <td style="padding: 0 10px">
+                <div class="form-group">
+                    <select class="form-control" name="status">
+                        <option value="1" checked>1</option>
+                        <option value="0">0</option>
+                    </select>
+                </div>
+            </td>
+            <td style="padding: 0 10px"><div style="padding: 0 10px"><button type="submit" class="btn btn-success btn-lg" >Draw chart</button></div></td>
+        </tr>
     </table>
-</div>
-<div class="form-group">
-    <?= $form->field($model, 'package')->dropDownList(ArrayHelper::map($adminPackages, 'id', 'name')); ?>
-</div>
-<div class="form-group">
-    <?= $form->field($model, 'reseller_notes')->textarea(['rows' => 4]) ?>
-</div>
-<div class="form-group">
-    <div class="col-md-3">
-        <a class="btn btn-success" id="bouquetList">Bouquet List</a>
+
+    <div style="width: 800px; height: 500px">
+        <canvas id="myChart"></canvas>
     </div>
-    <div class="col-md-9">
-        <input type="text" class="form-control" name="" placeholder="Search...">
-    </div>
-</div>
-<div class="clearfix"></div>
-<div class="row" id ="rowbouet" style="padding: 15px; display: none;">
-    <div class="form-group" style="padding-top: 20px">
-        <div class="col-md-12" style="margin-bottom: 20px"><a class="btn btn-success btn-sm" id="checkallbouquet">Check All</a></div>
-        <div class="clearfix"></div>
-        <?php foreach ($bouquet as $item){
-            if($item['allow_reseller'] == "1"){?>
-        <div class="col-sm-3">
-            <input type="checkbox" name="Line[bouquet][]" id="<?php echo $item['bouquet_name']; ?>" value="<?php echo $item['id']; ?>">
-            <span><?php echo $item['bouquet_name']; ?></span>
-        </div>
-        <?php }}?>
-    </div>
-</div>
-<div class="clearfix"></div>
-<hr>
-<div class="form-group">
-    <button type="submit" class="btn btn-success btn-lg">Create Line</button>
-    <button class="btn btn-danger btn-lg">Back to manage</button>
-</div>
-</form>
-<div class="text-center">Already have an account? <a href="#">Login here</a></div>
+
+    <?php ActiveForm::end();?>
 </div>
 
-<?php ActiveForm::end();?>
 <?php
+$date = $dataModels["date"];
+$data = $dataModels["data"];
+$color = $dataModels["color"];
 $js = <<< JS
-    var deleRow = function() {
-        var numRow = document.getElementById("ips").rows.length;
-        var table = document.getElementById("ips");
-        if(numRow>1)
-        {
-            table.deleteRow(0);
-        }        
-    }
-    document.getElementById('add_ips').onclick = function() {
-        var table = document.getElementById("ips");
-        var row = table.insertRow(0);
-        var cell1 = row.insertCell(0);
-        var cell2 = row.insertCell(1);
-        cell2.className='text-center';
-        cell1.innerHTML = "<input type='text' name='Line[allowed_ips][]' class='col-sm-12 form-control' placeholder='Please enter Ip...'>";
-        cell2.innerHTML = "<a class=\"btn btn-danger glyphicon glyphicon-remove\"></a>";
-        var elts = document.getElementsByClassName("btn btn-danger glyphicon glyphicon-remove");
-        for (var i = elts.length - 1; i >=0; --i) {
-            elts[i].onclick = deleRow;
+var ctx = document.getElementById('myChart').getContext('2d');
+var myChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+        datasets: [{
+            label: '# of Votes',
+            data: [12, 19, 3, 5, 2, 3],
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
         }
-
     }
-
-    document.getElementById("bouquetList").onclick=function() {
-        var rowBouquet = document.getElementById("rowbouet");
-        var property = rowBouquet.style.display;
-        if(property == "none"){
-            rowBouquet.style.display="block";
-        }else
-        {
-            rowBouquet.style.display="none";
-        }
-    }
-    document.getElementById("checkallbouquet").onclick=function(){
-      var checkboxes = document.querySelectorAll("input[type=\"checkbox\"]");
-      var checkallbouquet =document.getElementById('checkallbouquet');
-      if(checkallbouquet.text =="Check All"){
-          for (var checkbox of checkboxes) {
-            checkbox.checked = "checked";
-          }
-          document.getElementById("Full channels").checked="";
-          document.getElementById("Full user").checked="";
-          checkallbouquet.text = "Un Check All";
-      }else{    
-          for (var checkbox of checkboxes) {
-            checkbox.checked = "";
-          }
-          document.getElementById("Full channels").checked="checked";
-          document.getElementById("Full user").checked="checked";
-          checkallbouquet.text = "Check All"; 
-        }
-    }    
-
+});
+$(function() {
+  $('input[name="daterange"]').daterangepicker({
+    opens: 'left'
+  }, function(start, end, label) {
+    console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+  });
+});
 JS;
 $this->registerJs($js);
+
 
 ?>
